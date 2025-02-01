@@ -4,20 +4,15 @@ Contains the terraform code to create the infrastructure in AWS required to depl
 
 ## Deployment costs (US dollar - hourly - us-east-1)
 
-(Cluster)
-3x t3.xlarge: 0.167*3 = 0.501
-(Bastion host)
-1 t3.large: 0.0835
-(Networking)
-1 t3.medium: 0.0418
-1 pfSense license (t3.medium): 0.12
-1 NAT GW: 0.045
-(Storage)
-5x 32GB gp3 volumes: 0.0178
-
-Total hourly cost: 0.8091$
-Daily cost: 19.4179$
-Monthly cost: 582.54$
+| Resources                     | Hourly Cost | Daily Cost   | Monthly Cost |
+|-------------------------------|-------------|--------------|--------------|
+| Cluster (3x t3.xlarge)        | 0.501$      | 12.024$      | 360.72$      |
+| Bastion host (1 t3.large)     | 0.0835$     | 2.004$       | 60.12$       |
+| Networking (1 t3.medium)      | 0.0418$     | 1.0032$      | 30.096$      |
+| pfSense license (t3.medium)   | 0.12$       | 2.88$        | 86.4$        |
+| NAT GW                        | 0.045$      | 1.08$        | 32.4$        |
+| Storage (5x 32GB gp3 volumes) | 0.089$      | 2.136$       | 64.08$       |
+| **Total**                     | **0.8091$** | **19.4179$** | **582.54$**  |
 
 ## Deployment steps
 
