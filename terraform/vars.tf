@@ -70,3 +70,8 @@ variable "worker_node_num" {
   default = 2
 }
 
+variable "enable_pfsense" {
+  description = "Whether or not a pfSense router instance will be deployed"
+  type = bool
+  default = false
+}
