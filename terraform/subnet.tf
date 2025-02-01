@@ -27,6 +27,10 @@ resource "aws_subnet" "private_subnet" {
 }
 
 resource "aws_eip" "nat_ip" {
+  tags = {
+    Name = "NAT gateway EIP"
+    Deployment  = var.vpc_name
+  }
 }
 
 resource "aws_nat_gateway" "ngw" {
