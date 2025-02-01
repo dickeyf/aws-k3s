@@ -60,9 +60,9 @@ output "bastion_ipv4" {
 }
 
 output "pfsense_ipv4" {
-  value = aws_instance.pfsense_host.public_ip
+  value = var.enable_pfsense == true ? aws_instance.pfsense_host[0].public_ip : null
 }
 
 output "pfsense_ipv6" {
-  value = aws_instance.pfsense_host.ipv6_addresses[0]
+  value = var.enable_pfsense == true ? aws_instance.pfsense_host[0].ipv6_addresses[0] : null
 }

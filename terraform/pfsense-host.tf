@@ -8,7 +8,7 @@ resource "aws_instance" "pfsense_host" {
   }
 
   network_interface {
-    network_interface_id = aws_network_interface.pfsense_host_eni.id
+    network_interface_id = aws_network_interface.pfsense_host_eni[0].id
     device_index         = 0
   }
 
@@ -45,8 +45,8 @@ resource "aws_network_interface" "pfsense_host_eni" {
 
 resource "aws_eip_association" "pfsense_host_eip_assoc" {
   count                = var.enable_pfsense ? 1 : 0
-  network_interface_id = aws_network_interface.pfsense_host_eni.id
-  allocation_id        = aws_eip.pfsense_host_ip.allocation_id
+  network_interface_id = aws_network_interface.pfsense_host_eni[0].id
+  allocation_id        = aws_eip.pfsense_host_ip[0].allocation_id
 }
 
 resource "aws_eip" "pfsense_host_ip" {

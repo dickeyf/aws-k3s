@@ -3,7 +3,7 @@ resource "aws_subnet" "public_subnet" {
   availability_zone = data.aws_availability_zones.available.names[0]
 
   cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 0)
-  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 1)
+  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 0)
   assign_ipv6_address_on_creation = true
 
   tags = {
@@ -17,7 +17,7 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = data.aws_availability_zones.available.names[0]
 
   cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 1)
-  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 0)
+  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 1)
   assign_ipv6_address_on_creation = true
 
   tags = {
