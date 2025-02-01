@@ -17,3 +17,23 @@ data "aws_ami" "ubuntu_24_04" {
     values = ["ebs"]
   }
 }
+
+data "aws_ami" "pfsense" {
+  most_recent = true
+  owners      = ["679593333241"]
+
+  filter {
+    name   = "name"
+    values = ["pfSense-plus-ec2-24.11-RELEASE-*"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+}

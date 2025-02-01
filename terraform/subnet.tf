@@ -1,8 +1,10 @@
-resource "aws_subnet" "public_ipv4_subnet" {
+resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.vpc.id
   availability_zone = data.aws_availability_zones.available.names[0]
 
   cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 0)
+  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 1)
+  assign_ipv6_address_on_creation = true
 
   tags = {
     Name = "${var.vpc_name}-public"
@@ -15,7 +17,7 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = data.aws_availability_zones.available.names[0]
 
   cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 1)
-  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 2)
+  ipv6_cidr_block = cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 0)
   assign_ipv6_address_on_creation = true
 
   tags = {
@@ -29,7 +31,7 @@ resource "aws_eip" "nat_ip" {
 
 resource "aws_nat_gateway" "ngw" {
   allocation_id = aws_eip.nat_ip.id
-  subnet_id     = aws_subnet.public_ipv4_subnet.id
+  subnet_id     = aws_subnet.public_subnet.id
 
   tags = {
     Name = "${var.vpc_name}-public"
@@ -45,6 +47,11 @@ resource "aws_route_table" "public_rt" {
     gateway_id = aws_internet_gateway.igw.id
   }
 
+  route {
+    ipv6_cidr_block = "::/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+
   tags = {
     Name = "${var.vpc_name}-public"
     Deployment  = var.vpc_name
@@ -52,7 +59,7 @@ resource "aws_route_table" "public_rt" {
 }
 
 resource "aws_route_table_association" "public_rt_association" {
-  subnet_id      = aws_subnet.public_ipv4_subnet.id
+  subnet_id      = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.public_rt.id
 }
 

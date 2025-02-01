@@ -8,12 +8,36 @@ resource "aws_security_group" "sg" {
   }
 }
 
-resource "aws_vpc_security_group_ingress_rule" "ssh" {
+resource "aws_vpc_security_group_ingress_rule" "ssh_v6" {
   security_group_id = aws_security_group.sg.id
   from_port         = 22
   ip_protocol       = "TCP"
   to_port           = 22
   cidr_ipv6         = var.allowed_ipv6_cidr_block
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ssh_v4" {
+  security_group_id = aws_security_group.sg.id
+  from_port         = 22
+  ip_protocol       = "TCP"
+  to_port           = 22
+  cidr_ipv4 = var.allowed_ipv4_cidr_block
+}
+
+resource "aws_vpc_security_group_ingress_rule" "https_v6" {
+  security_group_id = aws_security_group.sg.id
+  from_port         = 443
+  ip_protocol       = "TCP"
+  to_port           = 443
+  cidr_ipv6         = var.allowed_ipv6_cidr_block
+}
+
+resource "aws_vpc_security_group_ingress_rule" "https_v4" {
+  security_group_id = aws_security_group.sg.id
+  from_port         = 443
+  ip_protocol       = "TCP"
+  to_port           = 443
+  cidr_ipv4 = var.allowed_ipv4_cidr_block
 }
 
 resource "aws_vpc_security_group_ingress_rule" "from_sg" {

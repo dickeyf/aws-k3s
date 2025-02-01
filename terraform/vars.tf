@@ -3,6 +3,19 @@ variable "aws_region" {
   type = string
 }
 
+variable "bastion_instance_type" {
+  default = "t3.large"
+  description = "The instance type to use for bastion host"
+  type = string
+}
+
+
+variable "pfsense_instance_type" {
+  default = "t3.medium"
+  description = "The instance type to use for bastion host"
+  type = string
+}
+
 variable "instance_type" {
   default = "t3.xlarge"
   description = "The instance type to use for the k3s nodes.  Default is t3.xlarge, which should be cheap enough, but powerful enough for most testing use cases."
@@ -18,6 +31,7 @@ variable "vpc_name" {
 variable "keypair_name" {
   description = "The name of the keypair for SSH access"
   type = string
+  default = "k3s-host-key"
 }
 
 variable "vpc_cidr" {
@@ -26,10 +40,28 @@ variable "vpc_cidr" {
   default = "172.31.0.0/16"
 }
 
+variable "service_ipv4_cidr" {
+  description = "The IPv4 CIDR for K8S services"
+  type = string
+  default = "10.43.0.0/16"
+}
+
+variable "pods_ipv4_cidr" {
+  description = "The IPv4 CIDR for K8S services"
+  type = string
+  default = "10.42.0.0/16"
+}
+
 variable "allowed_ipv6_cidr_block" {
   description = "The allowed IPv6 CIDR blocks.  Default is all IPv6 addresses, but it is suggested that you put your own public ipv6 CIDR block here (From where you'll ssh)."
   type        = string
   default = "::/0"
+}
+
+variable "allowed_ipv4_cidr_block" {
+  description = "The allowed IPv4 block."
+  type = string
+  default = "0.0.0.0/0"
 }
 
 variable "worker_node_num" {
