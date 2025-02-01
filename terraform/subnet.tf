@@ -71,9 +71,10 @@ resource "aws_route_table" "private_rt" {
     nat_gateway_id = aws_nat_gateway.ngw.id
   }
 
+  # We don't want IPv6 public traffic in this subnet
   route {
     ipv6_cidr_block = "::/0"
-    gateway_id = aws_internet_gateway.igw.id
+    gateway_id = aws_egress_only_internet_gateway.eg_igw.id
   }
 
   tags = {

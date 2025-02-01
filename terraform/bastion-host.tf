@@ -41,4 +41,8 @@ resource "aws_eip_association" "bastion_host_eip_assoc" {
 }
 
 resource "aws_eip" "bastion_host_ip" {
+  tags = {
+    Name = "Bastion Host EIP"
+    Deployment  = var.vpc_name
+  }
 }

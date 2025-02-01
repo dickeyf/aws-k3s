@@ -51,5 +51,8 @@ resource "aws_eip_association" "pfsense_host_eip_assoc" {
 
 resource "aws_eip" "pfsense_host_ip" {
   count = var.enable_pfsense ? 1 : 0
+  tags = {
+    Name = "pfsense EIP"
+    Deployment  = var.vpc_name
+  }
 }
-
