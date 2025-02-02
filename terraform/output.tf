@@ -28,7 +28,8 @@ output "ssh_private_key" {
 }
 
 locals {
-  k3s_config = <<EOF
+  k3s_config = <<HEREDOC
+cat << EOF > /etc/rancher/k3s/config.yaml
 write-kubeconfig-mode: "0644"
 flannel-backend: none
 disable-network-policy: true
@@ -36,10 +37,33 @@ disable-kube-proxy: true
 disable:
   - servicelb
 cluster-cidr: ${var.pods_ipv4_cidr},${cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 2)}
-service-cidr: ${var.service_ipv4_cidr},${cidrsubnet(cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 1), 48, 0)}
+service-cidr: ${var.service_ipv4_cidr},${cidrsubnet(cidrsubnet(aws_vpc.vpc.ipv6_cidr_block, 8, 3), 48, 0)}
 cluster-init: true
 tls-san:
   - "${aws_instance.master_node.ipv6_addresses[0]}"
+EOF
+HEREDOC
+  ssh_config = <<EOF
+Host bastion
+  Hostname ${aws_instance.bastion_host.public_ip}
+  User ubuntu
+  IdentityFile .tmp/ssh
+
+Host master
+  Hostname ${aws_instance.master_node.private_ip}
+  User ubuntu
+  IdentityFile .tmp/ssh
+  ProxyJump bastion
+Host worker1
+  Hostname ${aws_instance.worker_nodes[0].private_ip}
+  User ubuntu
+  IdentityFile .tmp/ssh
+  ProxyJump bastion
+host worker2
+  Hostname ${aws_instance.worker_nodes[1].private_ip}
+  User ubuntu
+  IdentityFile .tmp/ssh
+  ProxyJump bastion
 EOF
 }
 
@@ -65,4 +89,24 @@ output "pfsense_ipv4" {
 
 output "pfsense_ipv6" {
   value = var.enable_pfsense == true ? aws_instance.pfsense_host[0].ipv6_addresses[0] : null
+}
+
+output "ssh_config" {
+  value = local.ssh_config
+}
+
+output "bastion_ssh_cmd" {
+  value = "ssh -F .tmp/ssh_config bastion"
+}
+
+output "master_ssh_cmd" {
+  value = "ssh -F .tmp/ssh_config master"
+}
+
+output "worker1_ssh_cmd" {
+  value = "ssh -F .tmp/ssh_config worker1"
+}
+
+output "worker2_ssh_cmd" {
+  value = "ssh -F .tmp/ssh_config worker2"
 }
