@@ -9,6 +9,11 @@ variable "bastion_instance_type" {
   type = string
 }
 
+variable "k3s_version" {
+  default = "v1.32.1+k3s1"
+  description = "The version of K3S to install"
+  type = string
+}
 
 variable "pfsense_instance_type" {
   default = "t3.medium"
